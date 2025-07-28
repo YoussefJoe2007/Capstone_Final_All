@@ -1,0 +1,285 @@
+@using System.Linq
+@model UsersApp.ViewModels.PatientDashboardViewModel
+@{
+    ViewData["Title"] = "Patient Dashboard";
+    Layout = "_Layout";
+}
+
+<style>
+    .quick-action-btn {
+        min-width: 180px;
+        min-height: 48px;
+        font-size: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 12px 16px 12px;
+        background: #0080ff;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        transition: background 0.2s, transform 0.2s;
+    }
+    .quick-action-btn i {
+        margin-bottom: 4px;
+        font-size: 1.2rem;
+    }
+    .quick-action-btn:hover {
+        background: #005bb5;
+        color: #fff;
+        transform: translateY(-2px) scale(1.03);
+    }
+</style>
+
+<div class="container-fluid animate-fade-in py-4" style="background:#f8f9fa;min-height:100vh;">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 animate-slide-left">
+        <h1 class="h3 mb-0 text-primary fw-bold">Welcome, @Model.User.FullName!</h1>
+@*         <a href="@Url.Action("Doctors", "PatientDashboard")" class="d-none d-sm-inline-block btn btn-primary btn-sm shadow-sm btn-animated hover-lift">
+            <i class="fas fa-plus fa-sm text-white-50 icon-animated"></i> Book Appointment
+        </a> *@
+    </div>
+
+    <!-- Stat Cards Row -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4 animate-slide-left">
+          @*   <div class="card border-left-primary shadow h-100 py-2 card-animated">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Medical Forms
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.MedicalForms.Count()</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-medical fa-lg text-gray-300 icon-animated"></i>
+                        </div>
+                    </div>
+                </div>
+            </div> *@
+        </div>
+     @*    <div class="col-xl-3 col-md-6 mb-4 animate-slide-left" style="animation-delay: 0.1s;">
+            <div class="card border-left-success shadow h-100 py-2 card-animated">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Appointments
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Appointments.Count()</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-lg text-gray-300 icon-animated"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> *@
+@*         <div class="col-xl-3 col-md-6 mb-4 animate-slide-left" style="animation-delay: 0.2s;">
+            <div class="card border-left-info shadow h-100 py-2 card-animated">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Upcoming
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @Model.Appointments.Count(a => a.Date > DateTime.Now)
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-lg text-gray-300 icon-animated"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> *@
+@*         <div class="col-xl-3 col-md-6 mb-4 animate-slide-left" style="animation-delay: 0.3s;">
+            <div class="card border-left-warning shadow h-100 py-2 card-animated">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Completed
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @Model.Appointments.Count(a => a.Date < DateTime.Now)
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-lg text-gray-300 icon-animated"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> *@
+    </div>
+
+    <!-- Recent Appointments -->
+    <div class="row">
+        <div class="col-lg-6 mb-4 animate-slide-right">
+            <div class="card shadow mb-4 card-animated">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Appointments</h6>
+                    <a href="@Url.Action("MyAppointments", "PatientDashboard")" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye"></i> View All
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (Model.Appointments.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead style="background:#f1f3f6;">
+                                    <tr>
+                                        <th>Doctor</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var appointment in Model.Appointments.Take(5))
+                                    {
+                                        <tr class="table-row-animated">
+                                            <td>
+                                                @appointment.Doctor.FirstName @appointment.Doctor.LastName
+                                            </td>
+                                            <td>@appointment.Date.ToString("dd/MM/yyyy")</td>
+                                            <td>@appointment.Time.ToString("HH:mm")</td>
+                                            <td>
+                                                @if (appointment.Date > DateTime.Now)
+                                                {
+                                                    <span class="badge badge-info">Upcoming</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-success">Completed</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x text-gray-300 mb-3 icon-animated"></i>
+                            <h5 class="text-gray-500">No Appointments</h5>
+                            <p class="text-gray-400">You haven't booked any appointments yet</p>
+                            <a href="@Url.Action("Doctors", "PatientDashboard")" class="btn btn-primary btn-sm btn-animated hover-lift">
+                                <i class="fas fa-plus icon-animated"></i> Book Appointment
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Medical Forms -->
+        <div class="col-lg-6 mb-4 animate-slide-right" style="animation-delay: 0.1s;">
+            <div class="card shadow mb-4 card-animated">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Medical Forms</h6>
+                    <a href="@Url.Action("MedicalForms", "PatientDashboard")" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye"></i> View All
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (Model.MedicalForms.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead style="background:#f1f3f6;">
+                                    <tr>
+                                        <th>Form ID</th>
+                                        <th>Doctor</th>
+                                        <th>Created Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var form in Model.MedicalForms.Take(5))
+                                    {
+                                        <tr class="table-row-animated">
+                                            <td>#@form.Id</td>
+                                            <td>
+                                                @form.Doctor.FirstName @form.Doctor.LastName
+                                            </td>
+                                            <td>@form.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                            <td>
+                                                <a href="@Url.Action("DownloadPdf", "PatientDashboard", new { id = form.Id })" 
+                                                   class="btn btn-success btn-sm btn-animated hover-scale" target="_blank">
+                                                    <i class="fas fa-download icon-animated"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-file-medical fa-3x text-gray-300 mb-3 icon-animated"></i>
+                            <h5 class="text-gray-500">No Medical Forms</h5>
+                            <p class="text-gray-400">You haven't created any medical forms yet</p>
+                            <a href="@Url.Action("Doctors", "PatientDashboard")" class="btn btn-primary btn-sm btn-animated hover-lift">
+                                <i class="fas fa-plus icon-animated"></i> Create Form
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Row -->
+    <div class="row animate-fade-in" style="animation-delay: 0.5s;">
+        <div class="col-12">
+            <div class="card shadow mb-4 card-animated">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center my-4">
+                        <a href="@Url.Action("MyAppointments", "PatientDashboard")" class="btn quick-action-btn">
+                            <i class="fas fa-calendar-alt icon-animated"></i>
+                            <span>My Appointments</span>
+                        </a>
+                        <a href="@Url.Action("Clinics", "PatientDashboard")" class="btn quick-action-btn">
+                            <i class="fas fa-hospital icon-animated"></i>
+                            <span>View Clinics</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Add staggered animation to cards
+            $('.card').each(function(index) {
+                $(this).css('animation-delay', (index * 0.1) + 's');
+            });
+            // Add hover effects to quick action buttons
+            $('.btn-block, .w-100').hover(
+                function() {
+                    $(this).find('i').addClass('animate-bounce');
+                },
+                function() {
+                    $(this).find('i').removeClass('animate-bounce');
+                }
+            );
+        });
+    </script>
+} 

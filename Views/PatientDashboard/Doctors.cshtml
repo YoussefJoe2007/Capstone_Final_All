@@ -1,0 +1,76 @@
+@model IEnumerable<UsersApp.Models.Doctor>
+@{
+    ViewData["Title"] = "Available Doctors";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid py-4" style="background:#f8f9fa;min-height:100vh;">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-primary fw-bold">Available Doctors</h1>
+    </div>
+
+    <div class="row">
+        @foreach (var doctor in Model)
+        {
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    @doctor.Speciality
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    Dr. @doctor.FirstName @doctor.LastName
+                                </div>
+                                <div class="text-xs text-gray-600 mb-1">
+                                    <i class="fas fa-map-marker-alt"></i> @doctor.City
+                                </div>
+                                <div class="text-xs text-gray-600 mb-1">
+                                    <i class="fas fa-hospital"></i> @(doctor.Clinic?.Name ?? "Not specified")
+                                </div>
+                                <div class="text-xs text-gray-600 mb-1">
+                                    <i class="fas fa-phone"></i> @doctor.PhoneNumber
+                                </div>
+                                <div class="text-xs text-gray-600 mb-2">
+                                    <i class="fas fa-money-bill"></i> Consultation Fee: @doctor.ConsultationFee.ToString("C")
+                                </div>
+                                <div class="text-xs text-gray-600 mb-2">
+                                    <i class="fas fa-clock"></i> Experience: @doctor.Experience years
+                                </div>
+                                @if (!string.IsNullOrEmpty(doctor.Description))
+                                {
+                                    <div class="text-xs text-gray-600 mb-2">
+                                        @doctor.Description
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-user-md fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="@Url.Action("BookAppointment", "PatientDashboard", new { doctorId = doctor.Id })" 
+                               class="btn btn-primary btn-sm">
+                                <i class="fas fa-calendar-plus"></i> Book Appointment
+                            </a>
+                            <a href="@Url.Action("CreateMedicalForm", "PatientDashboard", new { doctorId = doctor.Id })" 
+                               class="btn btn-info btn-sm">
+                                <i class="fas fa-file-medical"></i> Medical Form
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-user-md fa-3x text-gray-300 mb-3"></i>
+            <h4 class="text-gray-500">No Doctors Available</h4>
+            <p class="text-gray-400">Please try again later</p>
+        </div>
+    }
+</div> 

@@ -1,0 +1,120 @@
+@model IEnumerable<UsersApp.Models.Appointment>
+@{
+    ViewData["Title"] = "Appointments Management";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Appointments Management</h1>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">All Appointments</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Clinic</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var appointment in Model)
+                        {
+                            <tr>
+                                <td>@appointment.Patient.FullName</td>
+                                <td>@appointment.Doctor.FirstName @appointment.Doctor.LastName</td>
+                                <td>@(appointment.Doctor.Clinic?.Name ?? "Not specified")</td>
+                                <td>@appointment.Date.ToString("dd/MM/yyyy")</td>
+                                <td>@appointment.Time.ToString("HH:mm")</td>
+                                <td>
+                                    <select class="form-control form-control-sm status-select" 
+                                            data-appointment-id="@appointment.Id"
+                                            onchange="updateAppointmentStatus(@appointment.Id, this.value)">
+                                        <option value="0" selected="@(appointment.Status == AppointmentStatus.Pending)">
+                                            Pending
+                                        </option>
+                                        <option value="1" selected="@(appointment.Status == AppointmentStatus.Confirmed)">
+                                            Confirmed
+                                        </option>
+                                        <option value="2" selected="@(appointment.Status == AppointmentStatus.Cancelled)">
+                                            Cancelled
+                                        </option>
+                                        <option value="3" selected="@(appointment.Status == AppointmentStatus.Completed)">
+                                            Completed
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>@appointment.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-info" 
+                                            onclick="viewAppointmentDetails(@appointment.Id)">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Appointment Details Modal -->
+<div class="modal fade" id="appointmentDetailsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Appointment Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="appointmentDetailsContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateAppointmentStatus(appointmentId, status) {
+            $.ajax({
+                url: '@Url.Action("UpdateAppointmentStatus", "Admin")',
+                type: 'POST',
+                data: { appointmentId: appointmentId, status: status },
+                success: function(response) {
+                    if (response.success) {
+                        // Show success message
+                        alert('Appointment status updated successfully');
+                    } else {
+                        alert('Error updating appointment status');
+                    }
+                },
+                error: function() {
+                    alert('Connection error');
+                }
+            });
+        }
+
+        function viewAppointmentDetails(appointmentId) {
+            // Load appointment details via AJAX
+            $.get('@Url.Action("AppointmentDetails", "Admin")/' + appointmentId, function(data) {
+                $('#appointmentDetailsContent').html(data);
+                $('#appointmentDetailsModal').modal('show');
+            });
+        }
+    </script>
+} 

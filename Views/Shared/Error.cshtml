@@ -1,0 +1,39 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="text-center">
+                <h1 class="display-1 text-danger">404</h1>
+                <h2 class="mb-4">Sorry, page not found</h2>
+                <p class="lead mb-4">
+                    The page you are looking for does not exist or has been moved.
+                </p>
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .display-1 {
+        font-size: 6rem;
+        font-weight: 300;
+        line-height: 1.2;
+    }
+    
+    .text-danger {
+        color: #dc3545 !important;
+    }
+    
+    .lead {
+        font-size: 1.25rem;
+        font-weight: 300;
+    }
+</style>

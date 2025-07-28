@@ -1,0 +1,245 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    Layout = "_Layout";
+}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 font-weight-bold mb-4">
+                    Welcome to Tashkheesy Management System
+                </h1>
+                <p class="lead mb-4">
+                    A comprehensive Tashkheesy management solution designed to streamline patient care,
+                    appointment scheduling, and medical facility administration.
+                </p>
+                <div class="mb-4">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a href="@Url.Action("Dashboard", "Admin")" class="btn btn-primary mr-3">
+                                <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                            </a>
+                        }
+                        else if (User.IsInRole("Patient"))
+                        {
+                            <a href="@Url.Action("Dashboard", "PatientDashboard")" class="btn btn-primary mr-3">
+                                <i class="fas fa-user"></i> Patient Dashboard
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Register", "Account")" class="btn btn-primary mr-3">
+                            <i class="fas fa-user-plus"></i> Get Started
+                        </a>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <i class="fas fa-heartbeat fa-10x text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Platform Features</h2>
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Doctor Management</h5>
+                        <p class="card-text">
+                            Comprehensive doctor profiles with specialties, experience, and consultation fees.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-hospital fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Clinic Management</h5>
+                        <p class="card-text">
+                            Manage multiple clinics with detailed information about services and working hours.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-check fa-3x text-info mb-3"></i>
+                        <h5 class="card-title">Appointment Scheduling</h5>
+                        <p class="card-text">
+                            Easy appointment booking system with real-time availability and status tracking.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Specialties Section -->
+<section class="specialties-section py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Book with Doctor in Clinic</h2>
+        <div class="grid">
+            <div class="card">
+                <img src="~/images/dentistry.png" alt="Dentistry">
+                <div class="card-body">
+                    <h3>Speciality</h3>
+                    <h4>Dentistry (Teeth)</h4>
+                    <p>Enamel – The hard, outer layer that protects the tooth from decay.</p>
+                    <p>Dentin – The layer beneath enamel, sensitive to decay if exposed.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="~/images/chest.png" alt="Chest and Respiratory">
+                <div class="card-body">
+                    <h3>Speciality</h3>
+                    <h4>Chest and Respiratory</h4>
+                    <p>Egestas elit dui scelerisque ut eu purus aliquam vitae habitasse.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="~/images/ent.png" alt="Ear, Nose and Throat">
+                <div class="card-body">
+                    <h3>Speciality</h3>
+                    <h4>Ear, Nose and Throat</h4>
+                    <p>Focus: Ear-related disorders, including hearing loss, tinnitus, vertigo, and skull base tumors.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="~/images/dermatology.png" alt="Dermatology">
+                <div class="card-body">
+                    <h3>Speciality</h3>
+                    <h4>Dermatology (Skin)</h4>
+                    <p>Dermatology is the medical specialty focused on diagnosing and treating conditions related to the skin, hair, nails, and mucous membranes.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="~/images/eyes.png" alt="Ophthalmology">
+                <div class="card-body">
+                    <h3>Speciality</h3>
+                    <h4>Ophthalmology (Eyes)</h4>
+                    <p>Ophthalmology is the branch of medicine specializing in eye care, including diagnosis, treatment, and surgery for vision disorders, eye diseases, and injuries.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="~/images/bones.png" alt="Orthopedics">
+                <div class="card-body">
+                    <h3>Speciality</h3>
+                    <h4>Orthopedics (Bones)</h4>
+                    <p>Orthopedics (or Orthopaedics) is the medical and surgical specialty focused on the bones, joints, muscles, ligaments, tendons, and nerves that make up the musculoskeletal system. </p>
+                </div>
+            </div>
+          
+        </div>
+    </div>
+</section>
+
+<!-- Why Tashkheesy Section -->
+<section class="why-tashkheesy-section py-5">
+    <div class="container" id="WhyTashkheesy">
+        <h2 class="section-title text-center mb-5">Why Tashkheesy is the best choice for you?</h2>
+        <div class="features-section">
+            <div class="features-container d-flex justify-content-center flex-wrap">
+                <div class="feature-card m-3">
+                    <div class="feature-icon">⏰</div>
+                    <h3 class="feature-title">Tashkheesy on Your Terms</h3>
+                    <p class="feature-desc">Book your doctor anytime, anywhere 24/7</p>
+                </div>
+                <div class="feature-card m-3">
+                    <div class="feature-icon">⭐</div>
+                    <h3 class="feature-title">Top doctors match your condition</h3>
+                    <p class="feature-desc">Read reviews, explore profiles and services</p>
+                </div>
+                <div class="feature-card m-3">
+                    <div class="feature-icon">💲</div>
+                    <h3 class="feature-title">Free Service</h3>
+                    <p class="feature-desc">No additional fees incurred upon booking</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 100px 0;
+        margin-top: -120px;
+        padding-top: 220px;
+    }
+
+    .hero-section h1 {
+        color: white;
+    }
+
+    .hero-section .lead {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .btn-outline-light:hover {
+        background-color: white;
+        color: #667eea;
+    }
+
+    @@media (max-width: 768px) {
+        .hero-section {
+            text-align: center;
+            padding: 50px 0;
+        }
+    }
+
+    select.form-control {
+        height: 45px;
+        padding: 10px 12px;
+        line-height: normal;
+        font-size: 1rem;
+        vertical-align: middle;
+    }
+
+    select.form-control option {
+        font-size: 1rem;
+    }
+
+    .chatbot-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        font-size: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        padding: 0;
+    }
+
+    .chatbot-btn i {
+        margin: 0;
+        padding: 0;
+        display: block;
+        line-height: 1;
+    }
+</style>

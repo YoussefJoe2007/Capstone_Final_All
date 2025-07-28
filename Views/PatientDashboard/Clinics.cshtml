@@ -1,0 +1,72 @@
+@model IEnumerable<UsersApp.Models.Clinic>
+@{
+    ViewData["Title"] = "Available Clinics";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Available Clinics</h1>
+    </div>
+
+    <div class="row">
+        @foreach (var clinic in Model)
+        {
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Clinic
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @clinic.Name
+                                </div>
+                                <div class="text-xs text-gray-600 mb-1">
+                                    <i class="fas fa-map-marker-alt"></i> @clinic.Address
+                                </div>
+                                <div class="text-xs text-gray-600 mb-1">
+                                    <i class="fas fa-phone"></i> @clinic.PhoneNumber
+                                </div>
+                                @if (!string.IsNullOrEmpty(clinic.WorkingHours))
+                                {
+                                    <div class="text-xs text-gray-600 mb-1">
+                                        <i class="fas fa-clock"></i> @clinic.WorkingHours
+                                    </div>
+                                }
+                                <div class="text-xs text-gray-600 mb-2">
+                                    <i class="fas fa-user-md"></i> Number of Doctors: @clinic.Doctors.Count
+                                </div>
+                                @if (!string.IsNullOrEmpty(clinic.Description))
+                                {
+                                    <div class="text-xs text-gray-600 mb-2">
+                                        @clinic.Description
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-hospital fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="@Url.Action("ClinicDetails", "PatientDashboard", new { id = clinic.Id })" 
+                               class="btn btn-success btn-sm">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-hospital fa-3x text-gray-300 mb-3"></i>
+            <h4 class="text-gray-500">No Clinics Available</h4>
+            <p class="text-gray-400">Please try again later</p>
+        </div>
+    }
+</div> 

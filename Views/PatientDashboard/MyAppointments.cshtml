@@ -1,0 +1,153 @@
+@model IEnumerable<UsersApp.Models.Appointment>
+@{
+    ViewData["Title"] = "My Appointments";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid py-4" style="background:#f8f9fa;min-height:100vh;">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-primary fw-bold">My Appointments</h1>
+        <a href="@Url.Action("Doctors", "PatientDashboard")" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Book a new appointment
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Appointment List</h6>
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered" width="100%" cellspacing="0">
+                        <thead style="background:#f1f3f6;">
+                            <tr>
+                                <th>Doctor</th>
+                                <th>Speciality</th>
+                                <th>Clinic</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var appointment in Model)
+                            {
+                                <tr>
+                                    <td>@appointment.Doctor.FirstName @appointment.Doctor.LastName</td>
+                                    <td>@appointment.Doctor.Speciality</td>
+                                    <td>@(appointment.Doctor.Clinic?.Name ?? "Not specified")</td>
+                                    <td>@appointment.Date.ToString("dd/MM/yyyy")</td>
+                                    <td>@appointment.Time.ToString("HH:mm")</td>
+                                    <td>
+                                        <span class="badge badge-@(appointment.Status switch {
+                                            AppointmentStatus.Pending => "warning",
+                                            AppointmentStatus.Confirmed => "success",
+                                            AppointmentStatus.Cancelled => "danger",
+                                            AppointmentStatus.Completed => "info",
+                                            _ => "secondary"
+                                        })">
+                                            @(appointment.Status switch {
+                                                AppointmentStatus.Pending => "Pending",
+                                                AppointmentStatus.Confirmed => "Confirmed",
+                                                AppointmentStatus.Cancelled => "Cancelled",
+                                                AppointmentStatus.Completed => "Completed",
+                                                _ => "Not specified"
+                                            })
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (appointment.Status == AppointmentStatus.Pending)
+                                        {
+                                            <button type="button" class="btn btn-sm btn-danger" 
+                                                    onclick="cancelAppointment(@appointment.Id)">
+                                                <i class="fas fa-times"></i> Cancel
+                                            </button>
+                                        }
+                                        @if (!string.IsNullOrEmpty(appointment.Notes))
+                                        {
+                                            <button type="button" class="btn btn-sm btn-info" 
+                                                    onclick="viewNotes(@appointment.Id, '@appointment.Notes')">
+                                                <i class="fas fa-eye"></i> Notes
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-calendar-times fa-3x text-gray-300 mb-3"></i>
+                    <h4 class="text-gray-500">No Appointments</h4>
+                    <p class="text-gray-400">You have not booked any appointments yet</p>
+                    <a href="@Url.Action("Doctors", "PatientDashboard")" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Book a new appointment
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Notes Modal -->
+<div class="modal fade" id="notesModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Appointment Notes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="notesContent"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function cancelAppointment(appointmentId) {
+            if (confirm('Are you sure you want to cancel this appointment?')) {
+                $.ajax({
+                    url: '@Url.Action("CancelAppointment", "PatientDashboard")',
+                    type: 'POST',
+                    data: { appointmentId: appointmentId },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred during the connection');
+                    }
+                });
+            }
+        }
+
+        function viewNotes(appointmentId, notes) {
+            $('#notesContent').text(notes);
+            $('#notesModal').modal('show');
+        }
+    </script>
+} 

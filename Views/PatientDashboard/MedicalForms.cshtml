@@ -1,0 +1,69 @@
+@model IEnumerable<UsersApp.Models.MedicalForm>
+@{
+    ViewData["Title"] = "Medical Forms";
+    Layout = "_Layout";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Medical Forms</h2>
+        <a href="@Url.Action("Doctors", "PatientDashboard")" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Create New Form
+        </a>
+    </div>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    <div class="card">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Doctor</th>
+                                <th>Speciality</th>
+                                <th>Date of Birth</th>
+                                <th>Phone Number</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var form in Model)
+                            {
+                                <tr>
+                                    <td>@form.FullName</td>
+                                    <td>@form.Doctor.FirstName @form.Doctor.LastName</td>
+                                    <td>@form.Doctor.Speciality</td>
+                                    <td>@form.DateOfBirth.ToString("dd/MM/yyyy")</td>
+                                    <td>@form.PhoneNumber</td>
+                                    <td>@form.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>
+                                        <a href="@Url.Action("DownloadPdf", "PatientDashboard", new { id = form.Id })" class="btn btn-sm btn-success" target="_blank">
+                                            <i class="fas fa-download"></i> Download PDF
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-file-medical fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">No Medical Forms</h4>
+                    <p class="text-muted">You haven't created any medical forms yet.</p>
+                    <a href="@Url.Action("Doctors", "PatientDashboard")" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create New Form
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div> 

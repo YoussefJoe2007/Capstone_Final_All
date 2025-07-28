@@ -1,0 +1,109 @@
+@model IEnumerable<UsersApp.Models.Clinic>
+@{
+    ViewData["Title"] = "Clinics Management";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Clinics Management</h1>
+        <a href="@Url.Action("AddClinic", "Admin")" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add New Clinic
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Clinics List</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Clinic Name</th>
+                            <th>Address</th>
+                            <th>Phone Number</th>
+                            <th>Number of Doctors</th>
+                            <th>Working Hours</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var clinic in Model)
+                        {
+                            <tr>
+                                <td>@clinic.Name</td>
+                                <td>@clinic.Address</td>
+                                <td>@clinic.PhoneNumber</td>
+                                <td>@clinic.Doctors.Count</td>
+                                <td>@(clinic.WorkingHours ?? "Not specified")</td>
+                                <td>
+                                    <span class="badge badge-@(clinic.IsActive ? "success" : "danger")">
+                                        @(clinic.IsActive ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("EditClinic", "Admin", new { id = clinic.Id })" 
+                                           class="btn btn-sm btn-primary" title="Edit">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <form asp-action="DeleteClinic" asp-controller="Admin" method="post" style="display:inline;">
+                                            <input type="hidden" name="id" value="@clinic.Id" />
+                                            <button type="submit" class="btn btn-sm btn-danger" 
+                                                    onclick="return confirm('Are you sure you want to delete this clinic?');" 
+                                                    title="Delete">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Clinic Details Modal -->
+<div class="modal fade" id="clinicDetailsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Clinic Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="clinicDetailsContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function viewClinicDetails(clinicId) {
+            // Load clinic details via AJAX
+            $.get('@Url.Action("ClinicDetails", "Admin")/' + clinicId, function(data) {
+                $('#clinicDetailsContent').html(data);
+                $('#clinicDetailsModal').modal('show');
+            });
+        }
+    </script>
+} 

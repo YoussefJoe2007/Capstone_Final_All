@@ -1,0 +1,310 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Users> signInManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Tashkheesy Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        /* RTL Support */
+        body {
+            direction: ltr;
+            text-align: left;
+        }
+
+        .container-fluid {
+            padding-top: 120px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+        }
+
+        .btn-group .btn {
+            margin-right: 5px;
+        }
+
+        .table th {
+            background-color: #f8f9fc;
+            border-top: none;
+        }
+
+        .badge {
+            font-size: 0.75em;
+        }
+
+        .modal-header {
+            background-color: #f8f9fc;
+        }
+
+        .form-control:focus {
+            border-color: #bac8f3;
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        }
+    </style>
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .navbar-nav .nav-link {
+            font-weight: 600;
+            margin: 0 0.5rem;
+        }
+
+        .welcome-text {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .chatbot-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+            .chatbot-btn i {
+                margin: 0;
+                padding: 0;
+                display: block;
+                line-height: 1;
+            }
+
+            .chatbot-btn:hover {
+                transform: scale(1.1);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            }
+
+        .chatbot-modal .modal-content {
+            border-radius: 15px;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+        }
+
+            .message.user {
+                justify-content: flex-end;
+            }
+
+            .message.bot {
+                justify-content: flex-start;
+            }
+
+        .message-content {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message.bot .message-content {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #e9ecef;
+        }
+
+        .chat-input {
+            border-top: 1px solid #e9ecef;
+            padding: 15px;
+        }
+
+            .chat-input input {
+                border-radius: 20px;
+                border: 1px solid #e9ecef;
+                padding: 10px 15px;
+            }
+
+            .chat-input button {
+                border-radius: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                color: white;
+                padding: 10px 20px;
+            }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <i class="fas fa-heartbeat"></i> Tashkheesy System
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li class="nav-item welcome-text">
+                            👋 Welcome, <strong>@(User.Identity?.Name ?? "User")</strong>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Home")">
+                                <i class="fas fa-home"></i> Home
+                            </a>
+                        </li>
+                        @*                         <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Privacy", "Home")">
+                                <i class="fas fa-user-secret"></i> Privacy
+                            </a>
+                        </li> *@
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Dashboard", "Admin")">
+                                    <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Patient"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Dashboard", "PatientDashboard")">
+                                    <i class="fas fa-user"></i> Patient Dashboard
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Logout", "Account")">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Login", "Account")">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Register", "Account")">
+                                <i class="fas fa-user-plus"></i> Register
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- ChatBot Button -->
+    @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Patient"))
+    {
+        <a href="@Url.Action("Index", "Chat")" class="chatbot-btn" title="Chat">
+            <i class="fas fa-comments"></i>
+        </a>
+    }
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+
+    <script>
+        // Theme toggle
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        }
+        document.getElementById('themeToggle').onclick = function() {
+            const isDark = document.body.classList.contains('dark-theme');
+            setTheme(isDark ? 'light' : 'dark');
+        };
+        // On load
+        setTheme(localStorage.getItem('theme') || 'light');
+
+        // Language toggle
+        function setLang(lang) {
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
+            localStorage.setItem('lang', lang);
+            document.getElementById('langToggle').innerHTML = lang === 'ar' ? '<i class="fas fa-language"></i> EN' : '<i class="fas fa-language"></i> AR';
+            // Optionally: reload or update static texts here
+        }
+        document.getElementById('langToggle').onclick = function() {
+            const current = localStorage.getItem('lang') || 'en';
+            setLang(current === 'en' ? 'ar' : 'en');
+            location.reload(); // For now, reload to apply language
+        };
+        setLang(localStorage.getItem('lang') || 'en');
+    </script>
+
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <footer class="footer">
+        <img src="~/images/Logo3.png" alt="Tashkheesy Logo" class="footer-logo" />
+        <div class="social-icons">
+            <i class="fab fa-linkedin icon"></i>
+            <i class="fab fa-instagram icon"></i>
+            <i class="fab fa-facebook icon"></i>
+            <i class="fab fa-twitter icon"></i>
+        </div>
+        <p>&copy; Tashkheesy 202X. All rights reserved.</p>
+    </footer>
+
+    <script src="~/js/site.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,164 @@
+@model UsersApp.ViewModels.MedicalFormViewModel
+@{
+    ViewData["Title"] = "Create Medical Form";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid animate-fade-in">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4 card-animated">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary animate-slide-left">Create New Medical Form</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="CreateMedicalForm" method="post" class="animate-fade-in">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <!-- Hidden fields for doctor information -->
+                        <input type="hidden" asp-for="DoctorId" />
+                        
+                        <!-- Display doctor information -->
+                        <div class="alert alert-info mb-4">
+                            <h6 class="alert-heading">Doctor Information</h6>
+                            <p class="mb-1"><strong>Doctor:</strong> @Model.DoctorName</p>
+                            <p class="mb-0"><strong>Speciality:</strong> @Model.DoctorSpeciality</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="FullName" class="control-label"></label>
+                                    <input asp-for="FullName" class="form-control form-control-animated" />
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="DateOfBirth" class="control-label"></label>
+                                    <input asp-for="DateOfBirth" class="form-control form-control-animated" placeholder="dd/mm/yyyy" />
+                                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber" class="control-label"></label>
+                                    <input asp-for="PhoneNumber" class="form-control form-control-animated" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Address" class="control-label"></label>
+                                    <input asp-for="Address" class="form-control form-control-animated" />
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="Height" class="control-label"></label>
+                                    <input asp-for="Height" class="form-control form-control-animated" placeholder="e.g. 170 cm" />
+                                    <span asp-validation-for="Height" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="Weight" class="control-label"></label>
+                                    <input asp-for="Weight" class="form-control form-control-animated" placeholder="e.g. 70 kg" />
+                                    <span asp-validation-for="Weight" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="BloodType" class="control-label"></label>
+                                    <select asp-for="BloodType" class="form-control form-control-animated">
+                                        <option value="">Select blood type</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                    <span asp-validation-for="BloodType" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ChronicDiseases" class="control-label"></label>
+                            <textarea asp-for="ChronicDiseases" class="form-control form-control-animated" rows="3" placeholder="List any chronic diseases if any..."></textarea>
+                            <span asp-validation-for="ChronicDiseases" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Allergies" class="control-label"></label>
+                            <textarea asp-for="Allergies" class="form-control form-control-animated" rows="3" placeholder="List any allergies if any..."></textarea>
+                            <span asp-validation-for="Allergies" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="CurrentMedications" class="control-label"></label>
+                            <textarea asp-for="CurrentMedications" class="form-control form-control-animated" rows="3" placeholder="List any current medications if any..."></textarea>
+                            <span asp-validation-for="CurrentMedications" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="FamilyHistory" class="control-label"></label>
+                            <textarea asp-for="FamilyHistory" class="form-control form-control-animated" rows="3" placeholder="List any family medical history..."></textarea>
+                            <span asp-validation-for="FamilyHistory" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="CurrentSymptoms" class="control-label"></label>
+                            <textarea asp-for="CurrentSymptoms" class="form-control form-control-animated" rows="3" placeholder="Describe your current symptoms in detail..."></textarea>
+                            <span asp-validation-for="CurrentSymptoms" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="AdditionalNotes" class="control-label"></label>
+                            <textarea asp-for="AdditionalNotes" class="form-control form-control-animated" rows="3" placeholder="Any additional notes..."></textarea>
+                            <span asp-validation-for="AdditionalNotes" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-animated hover-lift">
+                                <i class="fas fa-save icon-animated"></i> Save Form
+                            </button>
+                            <a href="@Url.Action("MedicalForms", "PatientDashboard")" class="btn btn-secondary btn-animated hover-lift">
+                                <i class="fas fa-arrow-left icon-animated"></i> Back to Forms
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Add staggered animation to form groups
+            $('.form-group').each(function(index) {
+                $(this).css('animation-delay', (index * 0.1) + 's');
+                $(this).addClass('animate-fade-in');
+            });
+            
+            // Add focus animations to form controls
+            $('.form-control').on('focus', function() {
+                $(this).addClass('animate-pulse');
+            }).on('blur', function() {
+                $(this).removeClass('animate-pulse');
+            });
+        });
+    </script>
+} 

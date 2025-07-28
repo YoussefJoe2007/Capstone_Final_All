@@ -1,0 +1,108 @@
+﻿@using UsersApp.ViewModels;
+@model RegisterViewModel;
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="account-container">
+    <div class="account-box">
+        <h2 class="text-center mb-4">Register</h2>
+
+        <div style="max-height: 400px; overflow-y: auto;">
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="FullName" class="form-label"></label>
+                    <input asp-for="FullName" class="form-control" placeholder="Full Name" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" placeholder="Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" placeholder="Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Role" class="form-label"></label>
+                    <select asp-for="Role" class="form-control" style="min-width: 100%;">
+                        <option value="">Select Role</option>
+                        <option value="Patient">Patient</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-success w-100 p-2">Register</button>
+                <div class="text-center mb-2 mt-2">
+                    <a asp-controller="Account" asp-action="ExternalLogin" asp-route-provider="Google"
+                       class="btn btn-google w-100 d-flex align-items-center justify-content-center gap-2 mb-2">
+                        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" width="20" height="20" />
+                        <span>Sign up with Google </span>
+                    </a>
+                </div>
+                <p class="text-center mt-2">
+                    Already have an account? <a asp-controller="Account" asp-action="Login" class="text-decoration-none">Login</a>
+                </p>
+                <div class="text-center">
+                    <a asp-controller="Home" asp-action="Index" class="text-decoration-none mt-3">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-google {
+        border: 2px solid #ddd;
+        background-color: white;
+        color: #444;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
+        .btn-google:hover {
+            background-color: #f7f7f7;
+            color: #222;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+    .account-box {
+        max-width: 400px;
+        width: 100%;
+        border-radius: 18px;
+    }
+
+    select.form-control {
+        height: 42px;
+        padding: 10px 14px;
+        font-size: 14px;
+        border-radius: 10px;
+        border: 1px solid #e2e6ea;
+        background-color: #fff;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        transition: border-color 0.2s ease-in-out;
+    }
+
+        select.form-control:focus {
+            border-color: #66afe9;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");
+    }
+}

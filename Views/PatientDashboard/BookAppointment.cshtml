@@ -1,0 +1,81 @@
+@model UsersApp.ViewModels.AppointmentViewModel
+@{
+    ViewData["Title"] = "Book Appointment";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Book Appointment</h1>
+        <a href="@Url.Action("Doctors", "PatientDashboard")" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Doctors
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Appointment Information</h6>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h6 class="font-weight-bold">Doctor Information:</h6>
+                    <p><strong>Name:</strong> @Model.DoctorName</p>
+                    <p><strong>Speciality:</strong> @Model.DoctorSpeciality</p>
+                    <p><strong>Clinic:</strong> @Model.ClinicName</p>
+                </div>
+            </div>
+
+            <form asp-action="BookAppointment" method="post">
+                <input type="hidden" asp-for="DoctorId" />
+                <input type="hidden" asp-for="DoctorName" />
+                <input type="hidden" asp-for="DoctorSpeciality" />
+                <input type="hidden" asp-for="ClinicName" />
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Date" class="control-label"></label>
+                            <input asp-for="Date" class="form-control" placeholder="dd/mm/yyyy" />
+                            <span asp-validation-for="Date" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Time" class="control-label"></label>
+                            <input asp-for="Time" class="form-control" type="time" />
+                            <span asp-validation-for="Time" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Notes" class="control-label"></label>
+                    <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Any additional notes..."></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calendar-plus"></i> Confirm Booking
+                    </button>
+                    <a href="@Url.Action("Doctors", "PatientDashboard")" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Set minimum date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            var today = new Date().toISOString().split('T')[0];
+            document.getElementById('Date').min = today;
+        });
+    </script>
+} 
